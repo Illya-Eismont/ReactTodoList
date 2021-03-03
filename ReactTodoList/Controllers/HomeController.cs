@@ -14,8 +14,8 @@ namespace TodoList.Controllers
     {
         DataBase db = new DataBase();
 
-        [HttpPost]
-        public async Task<IActionResult> GetTodoList()
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
             string id = "";
             if (!Request.Cookies.ContainsKey("id"))
@@ -33,7 +33,7 @@ namespace TodoList.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] string text)
+        public async Task<IActionResult> Post([FromBody] string text)
         {
 
             User user = await db.GetUser(Request.Cookies["id"]);
@@ -44,8 +44,8 @@ namespace TodoList.Controllers
             return new JsonResult(user.TodoItems);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RemoveItem([FromBody] string id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromBody] string id)
         {
             User user = await db.GetUser(Request.Cookies["id"]);
             user.TodoItems.Delete(id);
@@ -55,8 +55,8 @@ namespace TodoList.Controllers
             return new JsonResult(user.TodoItems);
         }
         
-        [HttpPost]
-        public async Task<IActionResult> EditItem([FromBody] TodoItemModel todoItem)
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] TodoItemModel todoItem)
         {
             User user = await db.GetUser(Request.Cookies["id"]);
             user.TodoItems.Edit(todoItem.Id, todoItem.Text, todoItem.IsDone);

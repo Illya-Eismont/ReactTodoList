@@ -1,73 +1,36 @@
-import React from 'react';
+import { useState } from 'react';
 
-export class TextToggle extends React.Component {
-	constructor(props){
-		super(props);
-		
-		this.state = {
-			text: this.props.text,
-			value: this.props.value
-		};
+export function TextToggle(props){
+	
+	const [value, setValue] = useState(false);
+	const [text, setText] = useState(props.text);
 
-		this.onChange = this.onChange.bind(this);
-		this.onKeyDown = this.onKeyDown.bind(this);
-		this.onDoubleClick = this.onDoubleClick.bind(this);
-		this.onBlur = this.onBlur.bind(this);
-	}
-
-	onChange(event) {
-		this.setState({
-			text: event.currentTarget.value
-		});
-	}
-
-	onDoubleClick(event) {
-		this.setState({
-			value: !this.state.value
-		});
-	}
-
-	onKeyDown(event) {
-		if(event.keyCode == 13 || event.keyCode == 27){
-			this.setState({
-				value: !this.state.value
-			});
-			
-			this.props.onTextChanged(this.state.text);
+	const onKeyDown = event => {
+		if(event.keyCode === 13 || event.keyCode === 27){
+			props.editItem(text);
+			setValue(!value);
 		}
 	}
 
-	onBlur(){
-		this.setState({
-			value: !this.state.value
-		});
-		
-		this.props.onTextChanged(this.state.text);
-	}
-
-
-	render(){
-		
-		if(!this.state.value){
-			return (
-				<label
-					onDoubleClick={this.onDoubleClick} 
-					className="toggle-text"
-				>
-					{this.state.text}
-				</label>
-			);
-		}
-
+	if(!value){
 		return (
-			<input 
-				type='text' 
-				name='toggle-input'
-				value={this.state.text}
-				onChange={this.onChange}
-				onKeyDown={this.onKeyDown}
-				onBlur={this.onBlur}
-				></input>
-		)
+			<label
+				onDoubleClick={() => setValue(!value)} 
+				className="toggle-text"
+			>
+				{text}
+			</label>
+		);
 	}
+
+	return (
+		<textarea 
+			type='text' 
+			name='toggle-input'
+			value={text}
+			onChange={ event => setText(event.currentTarget.value)}
+			onKeyDown={onKeyDown}
+			onBlur={() => { props.editItem(text); setValue(!value); }}
+			></textarea>
+	);
 }
