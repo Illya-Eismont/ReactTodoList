@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Btn } from './Btn';
 
 export function Popup(props){
